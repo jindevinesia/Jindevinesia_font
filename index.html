@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Jindevinesia’s Fonts </title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{
+background:linear-gradient(to bottom,#eaf6ff,#fff8dc);
+font-family:sans-serif;
+}
+
+/* LOGO EFFECT */
+.logo{
+font-size:26px;
+font-weight:bold;
+color:#835c2d;
+animation:shine 2s infinite alternate;
+}
+@keyframes shine{
+from{ text-shadow:0 0 5px #fff; }
+to{ text-shadow:0 0 20px #ffd700; }
+}
+
+/* CART SIDEBAR */
+.cart-sidebar{
+position:fixed;
+right:0;
+top:0;
+width:300px;
+height:100%;
+background:white;
+box-shadow:-3px 0 15px rgba(0,0,0,0.1);
+padding:15px;
+overflow:auto;
+}
+
+/* FONT CARD */
+.font-card{
+background:white;
+border:2px solid #cbeefd;
+border-radius:20px;
+padding:10px;
+}
+.font-title{
+color:#835c2d;
+font-weight:bold;
+font-size:12px;
+}
+.font-price{
+color:#835c2d;
+font-weight:bold;
+}
+.cart-btn{
+background:#835c2d;
+color:white;
+padding:6px;
+border-radius:10px;
+font-size:11px;
+}
+
+/* PROMO */
+.promo-box{
+background:linear-gradient(135deg,#cbeefd,#f7f1d6);
+border:2px solid #835c2d;
+}
+.promo-img{
+width:120px;
+height:120px;
+object-fit:cover;
+border-radius:16px;
+border:2px solid #835c2d;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="text-center py-6">
+<div class="logo">🏡🪼🐠 jindevinesia</div>
+<p class="text-sm text-gray-600">ร้านขายฟอนต์น่ารักสำหรับงานตกแต่ง</p>
+</header>
+
+<!-- PROMOTION -->
+<section class="px-6">
+<div class="promo-box rounded-3xl p-5 shadow-lg">
+<h3 class="text-center text-lg font-bold mb-4" style="color:#835c2d;">
+promotion 10font 399฿
+</h3>
+
+<div class="overflow-hidden">
+<div id="promoTrack" class="flex gap-3 transition-transform duration-500">
+<img src="images/font01.jpg" class="promo-img">
+<img src="images/font02.jpg" class="promo-img">
+<img src="images/font03.jpg" class="promo-img">
+<img src="images/font04.jpg" class="promo-img">
+<img src="images/font05.jpg" class="promo-img">
+<img src="images/font06.jpg" class="promo-img">
+<img src="images/font07.jpg" class="promo-img">
+<img src="images/font08.jpg" class="promo-img">
+<img src="images/font09.jpg" class="promo-img">
+<img src="images/font10.jpg" class="promo-img">
+</div>
+</div>
+</div>
+</section>
+
+<!-- FONT STORE -->
+<section class="px-6 mt-8">
+<h2 class="text-lg font-bold mb-4" style="color:#835c2d;">คลังฟอนต์ทั้งหมด</h2>
+<div id="fontGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+</section>
+
+<!-- CONTACT -->
+<section class="text-center mt-12 pb-20">
+<p>Line: @088jssxc</p>
+<p>Facebook: jindevinesia</p>
+<p>Instagram: jindevinesia.app</p>
+</section>
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar">
+<h3 style="color:#835c2d;font-weight:bold;">🛒 ตะกร้า</h3>
+<div id="cartItems" class="mt-4 text-sm"></div>
+<div id="cartTotal" class="mt-4 font-bold" style="color:#835c2d;">รวม: 0฿</div>
+
+<button onclick="sendToLine()" style="
+width:100%;
+margin-top:10px;
+background:#835c2d;
+color:white;
+padding:10px;
+border-radius:10px;">
+สั่งซื้อผ่าน LINE
+</button>
+</div>
+
+<script>
+const PRICE_PER_FONT=29;
+
+const promoFonts=[
+"Font01","Font02","Font03","Font04","Font05",
+"Font06","Font07","Font08","Font09","Font10"
+];
+
+let cart=[];
+const grid=document.getElementById("fontGrid");
+
+/* GENERATE 100 FONTS */
+for(let i=1;i<=100;i++){
+let num=i.toString().padStart(2,"0");
+let name="Font"+num;
+let isPromo=promoFonts.includes(name);
+
+let badge=isPromo
+? `<div style="font-size:10px;color:red;">PROMO</div>`
+: `<div style="font-size:10px;color:gray;">ไม่ร่วมโปร</div>`;
+
+grid.innerHTML+=`
+<div class="font-card">
+<img src="images/font${num}.jpg">
+<div class="font-title mt-2">${name}</div>
+${badge}
+<div class="font-price">${PRICE_PER_FONT}฿</div>
+<button class="cart-btn mt-2" onclick="addToCart('${name}',this)">
+ใส่ตะกร้า
+</button>
+</div>`;
+}
+
+/* CALCULATE TOTAL */
+function calculateTotal(){
+let promoCount=cart.filter(i=>promoFonts.includes(i)).length;
+let normalCount=cart.length-promoCount;
+let set=Math.floor(promoCount/10);
+let remain=promoCount%10;
+return(set*399)+(remain*29)+(normalCount*29);
+}
+
+/* ADD */
+function addToCart(name,btn){
+if(cart.includes(name)){
+alert("มีในตะกร้าแล้ว");
+return;
+}
+cart.push(name);
+btn.innerText="✓";
+btn.disabled=true;
+btn.style.opacity="0.5";
+updateCart();
+}
+
+/* REMOVE */
+function removeItem(name){
+cart=cart.filter(i=>i!==name);
+updateCart();
+location.reload();
+}
+
+/* UPDATE */
+function updateCart(){
+let html="";
+cart.forEach(item=>{
+html+=`
+<div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+<span>${item}</span>
+<button onclick="removeItem('${item}')" style="color:red;">ลบ</button>
+</div>`;
+});
+document.getElementById("cartItems").innerHTML=html;
+document.getElementById("cartTotal").innerText="รวม: "+calculateTotal()+"฿";
+}
+
+/* SEND LINE */
+function sendToLine(){
+let text=`สั่งซื้อฟอนต์ 🏡🪼🐠
+------------------
+${cart.join(", ")}
+------------------
+รวม: ${calculateTotal()}฿`;
+let url="https://line.me/R/msg/text/?"+encodeURIComponent(text);
+window.open(url,"_blank");
+}
+
+/* PROMO SLIDER */
+let promoIndex=0;
+const promoTrack=document.getElementById("promoTrack");
+setInterval(()=>{
+promoIndex++;
+if(promoIndex>5) promoIndex=0;
+promoTrack.style.transform=`translateX(-${promoIndex*130}px)`;
+},2000);
+</script>
+
+</body>
+</html>
